@@ -1,3 +1,6 @@
 [submodule "lib/ExtendedIO"]
 	path = lib/ExtendedIO
 	url = https://github.com/ArchLeaders/ExtendedIO
+[submodule "lib/abseil"]
+	path = lib/abseil
+	url = https://github.com/abseil/abseil-cpp
