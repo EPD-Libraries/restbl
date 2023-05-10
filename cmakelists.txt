@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(restble VERSION 0.1.0)
+project(restbl VERSION 0.1.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -10,14 +10,15 @@ set(CMAKE_STATIC_LIBRARY_PREFIX "")
 include(CTest)
 enable_testing()
 
-add_library(restble STATIC
-
+add_library(restbl STATIC
+    ./src/restbl.cpp
+    ./src/include/restbl/restbl.h
 )
 
-target_include_directories(restble PUBLIC ./src/include)
+target_include_directories(restbl PUBLIC ./src/include)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/lib/ExtendedIO)
-target_link_libraries(restble PUBLIC ExtendedIO)
+target_link_libraries(restbl PUBLIC ExtendedIO)
 
 set(BUILD_TESTING ON)
 
