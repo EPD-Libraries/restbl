@@ -1,5 +1,13 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.10)
 project(restbl VERSION 0.1.0)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    add_compile_options(-fdiagnostics-color=always)
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    add_compile_options(-fcolor-diagnostics)
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -17,8 +25,21 @@ add_library(restbl STATIC
 
 target_include_directories(restbl PUBLIC ./src/include)
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/lib/ExtendedIO)
-target_link_libraries(restbl PUBLIC ExtendedIO)
+if(MSVC)
+    target_compile_options(restbl PRIVATE /W4 /wd4244 /wd4127 /Zc:__cplusplus)
+else()
+    target_compile_options(restbl PRIVATE -Wall -Wextra -fno-plt)
+endif()
+
+set(BUILD_TESTING OFF)
+add_subdirectory(./lib/abseil)
+add_subdirectory(./lib/ExtendedIO)
+target_link_libraries(restbl
+    PUBLIC
+    ExtendedIO
+    absl::flat_hash_map
+    PRIVATE
+)
 
 set(BUILD_TESTING ON)
 
