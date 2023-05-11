@@ -5,8 +5,8 @@ namespace oepd {
 namespace restbl {
 
 RESTBL::RESTBL(tcb::span<const u8> data) : m_reader{data, exio::Endianness::Little} {
-  const auto header = *m_reader.Read<restbl::Header>();
-  if (header.magic != restbl::Magic) {
+  const auto header = *m_reader.Read<Header>();
+  if (header.magic != Magic) {
     throw exio::InvalidDataError("Invalid RESTBL magic");
   }
 
@@ -14,12 +14,12 @@ RESTBL::RESTBL(tcb::span<const u8> data) : m_reader{data, exio::Endianness::Litt
   m_unknown_2 = header.unknown_2;
 
   for (size_t i = 0; i < header.crc_table_num; i++) {
-    const auto entry = *m_reader.Read<restbl::HashEntry>();
+    const auto entry = *m_reader.Read<HashEntry>();
     m_crc_table.insert({entry.hash, entry.size});
   }
 
   for (size_t i = 0; i < header.name_table_num; i++) {
-    const auto entry = *m_reader.Read<restbl::NameEntry>();
+    const auto entry = *m_reader.Read<NameEntry>();
     m_name_table.insert({entry.name, entry.size});
   }
 }
@@ -43,11 +43,11 @@ std::vector<u8> RESTBL::ToBinary() {
                [this](const Table<u32>::value_type& a, const Table<u32>::value_type& b) { return a.first < b.first; });
 
   for (const Table<u32>::value_type& entry : crc_sorted_table) {
-    writer.Write(restbl::HashEntry{.hash = entry.first, .size = entry.second});
+    writer.Write(HashEntry{.hash = entry.first, .size = entry.second});
   }
 
   for (const auto [name, size] : m_name_table) {
-    restbl::NameEntry entry{};
+    NameEntry entry{};
     entry.size = size;
     strcpy(entry.name, name.c_str());
     writer.Write(entry);
