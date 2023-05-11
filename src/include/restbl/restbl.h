@@ -1,3 +1,4 @@
+#include <absl/algorithm/container.h>
 #include <absl/container/btree_map.h>
 #include <exio/binary_reader.h>
 #include <exio/binary_writer.h>
@@ -10,6 +11,9 @@
 namespace oepd {
 
 namespace restbl {
+
+template <typename T>
+using Table = absl::btree_map<T, u32>;
 
 constexpr auto Magic = exio::util::MakeMagic("RESTBL");
 
@@ -40,9 +44,6 @@ public:
 
   static RESTBL FromBinary(tcb::span<const u8> data);
   std::vector<u8> ToBinary();
-
-  template <typename T>
-  using Table = absl::btree_map<T, u32>;
 
   u32 m_unknown_1;
   u32 m_unknown_2;

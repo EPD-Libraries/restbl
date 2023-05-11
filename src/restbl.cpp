@@ -38,12 +38,17 @@ std::vector<u8> RESTBL::ToBinary() {
   exio::BinaryWriter writer{exio::Endianness::Little};
   writer.Write(header);
 
-  for (const auto [hash, size] : m_crc_table) {
-    writer.Write(restbl::HashEntry{.hash = hash, .size = size});
+  std::vector<std::reference_wrapper<Table<u32>::value_type>> crc_sorted_table{m_crc_table.begin(), m_crc_table.end()};
+  absl::c_sort(crc_sorted_table,
+               [this](const Table<u32>::value_type& a, const Table<u32>::value_type& b) { return a.first < b.first; });
+
+  for (const Table<u32>::value_type& entry : crc_sorted_table) {
+    writer.Write(restbl::HashEntry{.hash = entry.first, .size = entry.second});
   }
 
   for (const auto [name, size] : m_name_table) {
-    restbl::NameEntry entry{.size = size};
+    restbl::NameEntry entry{};
+    entry.size = size;
     strcpy(entry.name, name.c_str());
     writer.Write(entry);
   }
