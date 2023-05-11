@@ -19,20 +19,20 @@ struct Header {
   u32 unknown_2;
   u32 crc_table_num;
   u32 name_table_num;
-  EXIO_DEFINE_FIELDS(Header, magic, unknown_1, unknown_2, crc_table_num, name_table_num);
-};  // sizeof() = 22
+} __attribute__((packed));
+static_assert(sizeof(Header) == 0x16);
 
-struct Crc32Entry {
+struct HashEntry {
   u32 hash;
   u32 size;
-  EXIO_DEFINE_FIELDS(Crc32Entry, hash, size);
-};  // sizeof() = 8
+};
+static_assert(sizeof(HashEntry) == 0x08);
 
 struct NameEntry {
-  std::array<char, 128> name;
+  char name[160];
   u32 size;
-  EXIO_DEFINE_FIELDS(NameEntry, name, size);
-};  // sizeof() = 132
+} __attribute__((packed));
+static_assert(sizeof(NameEntry) == 0xA4);
 
 class RESTBL {
 public:
@@ -41,18 +41,14 @@ public:
   static RESTBL FromBinary(tcb::span<const u8> data);
   std::vector<u8> ToBinary();
 
-  u32 GetNumCrcTable();
-  u32 GetNumNameTable();
+  template <typename T>
+  using Table = absl::flat_hash_map<T, u32>;
 
-  u32 GetEntry(u32 hash);
-  u32 GetEntry(std::string_view name);
-
-  using Table = absl::flat_hash_map<u32, u32>;
-  Table m_files;
+  Table<u32> m_crc_table{};
+  Table<std::string> m_name_table{};
 
 private:
-  Header m_header;
-  mutable exio::BinaryReader m_reader;
+  exio::BinaryReader m_reader;
 };
 
 }  // namespace restbl
