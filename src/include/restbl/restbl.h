@@ -1,4 +1,4 @@
-#include <absl/container/flat_hash_map.h>
+#include <absl/container/btree_map.h>
 #include <exio/binary_reader.h>
 #include <exio/binary_writer.h>
 #include <exio/error.h>
@@ -42,8 +42,10 @@ public:
   std::vector<u8> ToBinary();
 
   template <typename T>
-  using Table = absl::flat_hash_map<T, u32>;
+  using Table = absl::btree_map<T, u32>;
 
+  u32 m_unknown_1;
+  u32 m_unknown_2;
   Table<u32> m_crc_table{};
   Table<std::string> m_name_table{};
 
