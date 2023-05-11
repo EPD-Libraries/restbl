@@ -5,12 +5,10 @@
 
 int main(int argc, char** argv) {
   std::cout << "[c++] Init Testing" << std::endl;
-  const auto data = file::util::ReadAllBytes(argv[1]);
-  oepd::restbl::RESTBL restbl{data};
+  const auto file = file::util::ReadAllBytes(argv[1]);
+  oepd::restbl::RESTBL restbl{file};
 
-  for (const auto [name, size] : restbl.m_name_table) {
-    std::cout << name << std::endl;
-  }
-
-  std::cout << "[c++] End Testing" << std::endl;
+  std::ofstream stream(argv[2], std::ios::binary);
+  const auto data = restbl.ToBinary();
+  stream.write(reinterpret_cast<const char*>(data.data()), data.size());
 }
