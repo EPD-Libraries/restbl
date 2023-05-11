@@ -31,7 +31,7 @@ static_assert(sizeof(HashEntry) == 0x08);
 struct NameEntry {
   char name[160];
   u32 size;
-} __attribute__((packed));
+};
 static_assert(sizeof(NameEntry) == 0xA4);
 
 class RESTBL {
