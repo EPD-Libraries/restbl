@@ -1,3 +1,5 @@
+#pragma once
+
 #include <absl/algorithm/container.h>
 #include <absl/container/btree_map.h>
 #include <exio/binary_reader.h>
