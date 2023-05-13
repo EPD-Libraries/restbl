@@ -43,9 +43,12 @@ static_assert(sizeof(NameEntry) == 0xA4);
 class RESTBL {
 public:
   RESTBL(tcb::span<const u8> data);
+  RESTBL(std::string_view yml_text);
 
   static RESTBL FromBinary(tcb::span<const u8> data);
+  static RESTBL FromText(std::string_view yml_text);
   std::vector<u8> ToBinary();
+  std::string ToText();
 
   u32 m_unknown_1;
   u32 m_unknown_2;
