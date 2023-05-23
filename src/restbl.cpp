@@ -10,8 +10,8 @@ RESTBL::RESTBL(tcb::span<const u8> data) : m_reader{data, exio::Endianness::Litt
     throw exio::InvalidDataError("Invalid RESTBL magic");
   }
 
-  m_unknown_1 = header.unknown_1;
-  m_unknown_2 = header.unknown_2;
+  m_version = header.version;
+  m_string_block_size = header.string_block_size;
 
   for (size_t i = 0; i < header.crc_table_num; i++) {
     const auto entry = *m_reader.Read<HashEntry>();
@@ -30,8 +30,8 @@ RESTBL RESTBL::FromBinary(tcb::span<const u8> data) {
 
 std::vector<u8> RESTBL::ToBinary() {
   Header header{.magic = restbl::Magic,
-                .unknown_1 = m_unknown_1,
-                .unknown_2 = m_unknown_2,
+                .version = m_version,
+                .string_block_size = m_string_block_size,
                 .crc_table_num = static_cast<u32>(m_crc_table.size()),
                 .name_table_num = static_cast<u32>(m_name_table.size())};
 

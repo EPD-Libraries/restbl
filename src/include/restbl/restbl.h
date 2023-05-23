@@ -21,8 +21,8 @@ constexpr auto Magic = exio::util::MakeMagic("RESTBL");
 
 struct Header {
   std::array<char, 6> magic;
-  u32 unknown_1;
-  u32 unknown_2;
+  u32 version;
+  u32 string_block_size;
   u32 crc_table_num;
   u32 name_table_num;
 } __attribute__((packed));
@@ -50,8 +50,8 @@ public:
   std::vector<u8> ToBinary();
   std::string ToText();
 
-  u32 m_unknown_1;
-  u32 m_unknown_2;
+  u32 m_version;
+  u32 m_string_block_size;
   Table<u32> m_crc_table{};
   Table<std::string> m_name_table{};
 
