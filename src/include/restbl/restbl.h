@@ -46,9 +46,7 @@ public:
   RESTBL(std::string_view yml_text);
 
   static RESTBL FromBinary(tcb::span<const u8> data);
-  static RESTBL FromText(std::string_view yml_text);
   std::vector<u8> ToBinary();
-  std::string ToText();
 
   u32 m_version;
   u32 m_string_block_size;

@@ -14,7 +14,6 @@ enable_testing()
 
 add_library(restbl STATIC
     ./src/restbl.cpp
-    ./src/restbl_text.cpp
     ./src/include/restbl/restbl.h
 )
 
